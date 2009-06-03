@@ -9,9 +9,9 @@ import model
 def index(request):
     return 'Hello world'
 
-@url('^/hello/([^/]*)/(?P<lastname>[^/]*)/?$')
-def hello(request, *vars, **v):
-    return 'Hello %s' % vars[0]
+@url('^/hello/(?P<name>\w+)/?$')
+def hello(request, *args, **kwargs):
+    return 'Hello %s' % kwargs.get('name')
 
 if __name__ == '__main__':
     ignite()

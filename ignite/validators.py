@@ -21,7 +21,7 @@ import encodings.idna
 import urllib
 from hashlib import sha512
 from cStringIO import StringIO
-from storage import Storage
+
 
 __all__ = [
     'IS_ALPHANUMERIC',
