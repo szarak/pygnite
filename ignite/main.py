@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
 import traceback
 
 from werkzeug import run_simple
@@ -26,12 +27,17 @@ def create_app(env, start_response):
             named_vars = match.groupdict() or {}
 
             (f, response_type) = _routes[route]
-            controller = f(request, *unamed_vars, **named_vars)
+            try:
+                 controller = f(request, *unamed_vars, **named_vars)
 
-            if isinstance(controller, basestring):
-                controller = Response(controller, mimetype=response_type)
+                 if isinstance(controller, basestring):
+                     controller = Response(controller, mimetype=response_type)
 
-            return controller(env, start_response)
+                 return controller(env, start_response)
+
+            except:
+                t = traceback.format_exception(*sys.exc_info())
+                return Response(_500(''.join(t)))(env, start_response)
 
     return Response(_404())(env, start_response)
 
@@ -42,3 +48,4 @@ def ignite(host='127.0.0.1', port=6060):
         run_simple(host, port, app, use_reloader=True)
     except Exception, exc:
         print exc
+

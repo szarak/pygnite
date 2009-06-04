@@ -8,7 +8,7 @@ from template import *
 
 from httplib import responses
 
-__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', '_404']
+__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', '_404', '_500']
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
@@ -120,6 +120,11 @@ def redirect(location, body='redirecting...', status=302, **kwds):
     response.headers['Location'] = location
 
     return response
+
+
+def _500(body=''):
+    setup_templates('/home/pagenoare/Projects/ignite/ignite/templates/')
+    return render('500.html', body=body)
 
 def _404():
     setup_templates('/home/pagenoare/Projects/ignite/ignite/templates/')
