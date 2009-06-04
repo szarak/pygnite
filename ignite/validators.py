@@ -22,6 +22,15 @@ import urllib
 from hashlib import sha512
 from cStringIO import StringIO
 
+def hash(text, digest_alg = 'md5'):
+    """
+    Generates hash with the given text using the specified 
+    digest hashing algorithm 
+    """    
+    import hashlib
+    h = hashlib.new(digest_alg)
+    h.update(text)
+    return h.hexdigest()
 
 __all__ = [
     'IS_ALPHANUMERIC',
@@ -1526,6 +1535,7 @@ class CLEANUP(object):
             if ord(c) in [10, 13] + range(32, 127):
                 v += c
         return (v, None)
+
 
 
 class CRYPT(object):

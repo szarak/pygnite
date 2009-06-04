@@ -10,7 +10,7 @@ Thanks to Niall Sweeny<niall.sweeny@fonjax.com> for MSSQL support
 Thanks to Marcel Leuthi<mluethi@mlsystems.ch> for Oracle support
 """
 
-__all__ = ['SQLDB', 'SQLField']
+__all__ = ['database', 'SQLDB', 'SQLField']
 
 import re
 import sys
@@ -90,7 +90,12 @@ sql_locker = thread.allocate_lock()
 def database(engine, db=None, host=None, username=None, password=None, port=None):
     if engine == 'sqlite3':
         if not db.startswith('/'):
-            db = os.path.join(''.join(os.path.split(os.path.dirname(__file__))[:-1]), db)
+            dirname = ''.join(os.path.split(os.path.dirname(__file__))[:-1])
+            db = os.path.join(dirname, db)
+            path = os.path.dirname(db)
+            
+            if not os.path.isdir(path):
+                os.makedirs(path)
         return SQLDB('sqlite://%s' % db)
     elif engine == 'oracle':
         return SQLDB('oracle://%s/%s@%s' % (username, password, db))

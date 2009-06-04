@@ -4,34 +4,52 @@
 from werkzeug import run_simple
 from werkzeug import Request
 from werkzeug import Response
-from werkzeug.exceptions import NotFound
 
-from routes import *
+from http import *
+from storage import Storage
+from sql import *
+from html import *
+from validators import *
 
-def not_found():
-    return "<h1>404</h1>"
+from beaker.middleware import SessionMiddleware
 
 def create_app(env, start_response):
     request = Request(env)
-    _routes = routes.get(request.method, 'GET')
+    request.session = env['beaker.session']
 
-    for route in _routes:
+    request.vars = Storage()
+    # Add GET vars to request.vars
+    for key, value in request.args.iteritems():
+        if type(value) == list and len(value) == 1:
+            value = value[0]
+
+        request.vars[key] = value
+
+    # Add POST vars to request.vars
+    for key, value in request.form.iteritems():
+        if type(value) == list and len(value) == 1:
+            value = value[0]
+
+        request.vars[key] = value
+
+    for route in routes:
         match = route.match(request.path)
         if match is not None:
-            unamed_vars = match.groups() or {}
+            unamed_vars = match.groups() or ()
             named_vars = match.groupdict() or {}
 
-            f = _routes[route]
+            f = routes[route]
             controller = f(request, *unamed_vars, **named_vars)
             if isinstance(controller, basestring):
-                controller = Response(controller)
+                controller = Response(controller, mimetype='text/html')
 
             return controller(env, start_response)
 
-    return Response(not_found())(env, start_response)
+    return Response(not_found(), mimetype='text/html')(env, start_response)
 
 
 def ignite(host='127.0.0.1', port=6060):
-    run_simple(host, port, create_app, use_reloader=True)
+    app = SessionMiddleware(create_app, key='mysession', secret='randomsecret')
+    run_simple(host, port, app, use_reloader=True)
 
 
