@@ -18,17 +18,18 @@ def create_app(env, start_response):
     request = Request(env)
     request.session = env['beaker.session']
 
-    for route in routes:
+    _routes = routes[request.method]
+    for route in _routes:
         match = route.match(request.path)
         if match is not None:
             unamed_vars = match.groups() or ()
             named_vars = match.groupdict() or {}
 
-            f = routes[route]
+            (f, response_type) = _routes[route]
             controller = f(request, *unamed_vars, **named_vars)
 
             if isinstance(controller, basestring):
-                controller = Response(controller)
+                controller = Response(controller, mimetype=response_type)
 
             return controller(env, start_response)
 
@@ -37,4 +38,7 @@ def create_app(env, start_response):
 
 def ignite(host='127.0.0.1', port=6060):
     app = SessionMiddleware(create_app, key='mysession', secret='randomsecret')
-    run_simple(host, port, app, use_reloader=True)
+    try:
+        run_simple(host, port, app, use_reloader=True)
+    except Exception, exc:
+        print exc

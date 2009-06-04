@@ -3,22 +3,42 @@
 import re
 import cgi
 
-from urlparse import *
-
-from storage import Storage
+from storage import *
 from template import *
 
 from httplib import responses
 
-__all__ = ['routes', 'url', 'Request', 'Response', 'redirect', '_404']
+__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', '_404']
 
-routes = dict()
+routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
-def url(addr):
+def url(addr, methods=['GET'], response_type='text/html'):
     def wrap(f):
-        if not routes.has_key(addr):
-            route = { re.compile(addr) : f }
-            routes.update(route)
+        for method in methods:
+            if method in routes:
+                if not routes[method].has_key(addr):
+                    route = { re.compile(addr) : (f, response_type) }
+                    routes[method].update(route)
+    return wrap
+
+def get(addr, **kwds):
+    def wrap(f):
+        return url(addr, methods=['GET'], **kwds)(f)
+    return wrap
+
+def post(addr, **kwds):
+    def wrap(f):
+        return url(addr, methods=['POST'], **kwds)(f)
+    return wrap
+
+def put(addr, **kwds):
+    def wrap(f):
+        return url(addr, methods=['PUT'], **kwds)(f)
+    return wrap
+
+def delete(addr, **kwds):
+    def wrap(f):
+        return url(addr, methods=['DELETE'], **kwds)(f)
     return wrap
 
 def get_response_status(status):
@@ -28,12 +48,10 @@ class Request(Storage):
     """Ignite request object"""
 
     def __init__(self, env):
-        for meta in env:
-            if meta == 'PATH_INFO':
-                self.path = env[meta] or '/'
-            else:
-                name = meta.replace('.', '_')
-                self[name] = env[meta]
+        self.path = env['PATH_INFO'] or '/'
+        self.method = env['REQUEST_METHOD']
+
+        self.update(env)
 
         self.vars = Storage()
         # GET vars:
@@ -59,7 +77,7 @@ class Request(Storage):
 
     def parse_post(self):
         vars = Storage()
-        fs = cgi.FieldStorage(fp=self['wsgi_input'], environ=self)
+        fs = cgi.FieldStorage(fp=self['wsgi.input'], environ=self)
         for field in fs.list:
             if field is not None:
                 name = field.name
@@ -73,7 +91,7 @@ class Request(Storage):
                 else:
                     vars[name] = value
 
-        del self['wsgi_input']
+        del self['wsgi.input']
 
         return vars
 
