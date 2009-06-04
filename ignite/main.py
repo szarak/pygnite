@@ -44,8 +44,5 @@ def create_app(env, start_response):
 
 def ignite(host='127.0.0.1', port=6060):
     app = SessionMiddleware(create_app, key='mysession', secret='randomsecret')
-    try:
-        run_simple(host, port, app, use_reloader=True)
-    except Exception, exc:
-        print exc
+    run_simple(host, port, app, use_reloader=True)
 
