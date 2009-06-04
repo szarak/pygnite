@@ -1,0 +1,7 @@
+{% if session.flash %}
+<pre id="flash" style="clear: both; background: red; border: 1px solid red; padding: 10px; width: 40%; text-align: center;">
+    {{ session.flash }}
+</pre>
+{% endif %}
+
+{% block content %}{% endblock %}

@@ -123,11 +123,11 @@ def redirect(location, body='redirecting...', status=302, **kwds):
 
 
 def _500(body=''):
-    setup_templates('/home/pagenoare/Projects/ignite/ignite/templates/')
+    append_path('/home/pagenoare/Projects/ignite/ignite/templates/')
     return render('500.html', body=body)
 
 def _404():
-    setup_templates('/home/pagenoare/Projects/ignite/ignite/templates/')
+    append_path('/home/pagenoare/Projects/ignite/ignite/templates/')
     return render('404.html')
 
 
