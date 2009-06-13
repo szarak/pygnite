@@ -1,10 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import traceback
 
 from werkzeug import run_simple
+from beaker.middleware import SessionMiddleware
+
+IGNITE_PATH = os.path.dirname(__file__)
 
 from http import *
 from storage import *
@@ -14,21 +18,17 @@ from sqlhtml import *
 from validators import *
 from template import *
 
-from beaker.middleware import SessionMiddleware
 
 def create_app(env, start_response):
-    global session
+    global request
 
     request = Request(env)
     request.session = env['beaker.session']
-    session = Storage(env['beaker.session'])
-    session.update(request.session)
 
     if request.session.has_key('flash'):
-        session.flash = request.session['flash']
         del request.session['flash']
     else:
-        session.flash = None
+        request.session['flash'] = None
 
     _routes = routes[request.method]
     for route in _routes:
@@ -54,8 +54,8 @@ def create_app(env, start_response):
     return Response(_404())(env, start_response)
 
 
-def ignite(host='127.0.0.1', port=6060):
-    app = SessionMiddleware(create_app, key='mysession', secret='randomsecret')
+def ignite(host='127.0.0.1', port=6060, session_key='mysession', session_secret='randomsecret'):
+    app = SessionMiddleware(create_app, key=session_key, secret=session_secret)
     run_simple(host, port, app, use_reloader=True)
 
 

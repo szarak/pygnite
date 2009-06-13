@@ -3,7 +3,8 @@
 
 # Jinja2 templates
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment 
+from jinja2 import FileSystemLoader
 
 templates_path = []
 
@@ -20,7 +21,7 @@ def append_path(path):
     env = Environment(loader=FileSystemLoader(templates_path))
 
 def render(template_name, **context):
-    from main import session
-    print session
+    from main import request
+
     template = env.get_template(template_name)
-    return template.render(session=session, **context)
+    return template.render(session=request.session, **context)

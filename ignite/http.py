@@ -5,6 +5,7 @@ import cgi
 
 from storage import *
 from template import *
+from main import IGNITE_PATH
 
 from httplib import responses
 
@@ -121,13 +122,12 @@ def redirect(location, body='redirecting...', status=302, **kwds):
 
     return response
 
+append_path(IGNITE_PATH + '/templates/')
 
 def _500(body=''):
-    append_path('/home/pagenoare/Projects/ignite/ignite/templates/')
     return render('500.html', body=body)
 
 def _404():
-    append_path('/home/pagenoare/Projects/ignite/ignite/templates/')
     return render('404.html')
 
 
