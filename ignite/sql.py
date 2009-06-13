@@ -87,15 +87,16 @@ import validators
 
 sql_locker = thread.allocate_lock()
 
-def database(engine, db=None, host=None, username=None, password=None, port=None):
+def database(engine='sqlite3', db='database.db', host=None, username=None, password=None, port=None):
     if engine == 'sqlite3':
         if not db.startswith('/'):
-            dirname = ''.join(os.path.split(os.path.dirname(__file__))[:-1])
-            db = os.path.join(dirname, db)
-            path = os.path.dirname(db)
-            
-            if not os.path.isdir(path):
-                os.makedirs(path)
+            root = ''.join(os.path.split(os.path.dirname(__file__))[:-1])
+            db_path = os.path.join(root, db)
+            db_folder = os.path.dirname(db)
+
+            if not os.path.isdir(db_folder):
+                os.makedirs(db_folder)
+
         return SQLDB('sqlite://%s' % db)
     elif engine == 'oracle':
         return SQLDB('oracle://%s/%s@%s' % (username, password, db))

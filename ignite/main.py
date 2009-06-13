@@ -37,12 +37,12 @@ def create_app(env, start_response):
             unamed_vars = match.groups() or ()
             named_vars = match.groupdict() or {}
 
-            (f, response_type) = _routes[route]
+            (f, content_type) = _routes[route]
             try:
                 controller = f(request, *unamed_vars, **named_vars)
 
                 if isinstance(controller, basestring):
-                    controller = Response(controller, mimetype=response_type)
+                    controller = Response(controller, content_type=content_type)
 
                 request.session.save()
                 return controller(env, start_response)

@@ -13,12 +13,12 @@ __all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
-def url(addr, methods=['GET'], response_type='text/html'):
+def url(addr, methods=['GET'], content_type='text/html'):
     def wrap(f):
         for method in methods:
             if method in routes:
                 if not routes[method].has_key(addr):
-                    route = { re.compile(addr) : (f, response_type) }
+                    route = { re.compile(addr) : (f, content_type) }
                     routes[method].update(route)
     return wrap
 
@@ -101,13 +101,13 @@ class Response(object):
 
     headers = {}
 
-    def __init__(self, body='', mimetype='text/html', status=200):
+    def __init__(self, body='', content_type='text/html', status=200):
         self.body = body
-        self.mimetype = mimetype
+        self.content_type = content_type
         self.status = get_response_status(status)
 
     def __call__(self, env, start_response):
-        self.headers['Content-type'] = self.mimetype
+        self.headers['Content-type'] = self.content_type
         self.headers['Content-length'] = len(self.body)
 
         start_response(self.status, self.headers.items())
