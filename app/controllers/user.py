@@ -15,7 +15,7 @@ def register(request):
 
     if form.accepts(request.vars):
         db.commit()
-        request.session['flash'] = 'You\'ve been registred. '
+        request.session['flash'] = 'You\'ve been registered. '
         return redirect('/')
 
     return render('form.html', form=form)
@@ -41,7 +41,7 @@ def login(request):
 
     return render('form.html', form=form)
 
-@get('^/logout/?')
+@get('^/logout/?$')
 def logout(request):
     if request.session.has_key('user'):
         del request.session['user']

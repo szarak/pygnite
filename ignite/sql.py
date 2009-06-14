@@ -28,7 +28,7 @@ import copy_reg
 import base64
 import hashlib
 
-md5_hash = lambda txt: hashlib.md5(txt).hexdigest()
+from utils import hash
 
 table_field = re.compile('[\w_]+\.[\w_]+')
 oracle_fix = re.compile("[^']*('[^']*'[^']*)*\:(?P<clob>CLOB\('([^']+|'')*'\))")
@@ -97,7 +97,7 @@ def database(engine='sqlite3', db='database.db', host=None, username=None, passw
             if not os.path.isdir(db_folder):
                 os.makedirs(db_folder)
 
-        return SQLDB('sqlite://%s' % db)
+        return SQLDB('sqlite://%s' % db_path)
     elif engine == 'oracle':
         return SQLDB('oracle://%s/%s@%s' % (username, password, db))
     else:
@@ -1230,7 +1230,7 @@ class SQLTable(dict):
             self._dbt = os.path.join(dbpath, migrate)
         else:
             self._dbt = os.path.join(dbpath, '%s_%s.table' \
-                     % (md5_hash(self._db._uri), self._tablename))
+                     % (hash(self._db._uri), self._tablename))
         if self._dbt:
             self._logfilename = os.path.join(dbpath, 'sql.log')
             logfile = open(self._logfilename, 'a')

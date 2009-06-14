@@ -11,7 +11,7 @@ from beaker.middleware import SessionMiddleware
 IGNITE_PATH = os.path.dirname(__file__)
 
 from http import *
-from storage import *
+from utils import *
 from sql import *
 from html import *
 from sqlhtml import *
@@ -24,11 +24,8 @@ def create_app(env, start_response):
 
     request = Request(env)
     request.session = env['beaker.session']
-
-    if request.session.has_key('flash'):
-        del request.session['flash']
-    else:
-        request.session['flash'] = None
+    request.flash = request.session.get('flash', None)
+    request.session['flash'] = None
 
     _routes = routes[request.method]
     for route in _routes:

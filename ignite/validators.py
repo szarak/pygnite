@@ -19,18 +19,11 @@ import cgi
 import hmac
 import encodings.idna
 import urllib
+
 from hashlib import sha512
 from cStringIO import StringIO
 
-def hash(text, digest_alg = 'md5'):
-    """
-    Generates hash with the given text using the specified 
-    digest hashing algorithm 
-    """    
-    import hashlib
-    h = hashlib.new(digest_alg)
-    h.update(text)
-    return h.hexdigest()
+from utils import hash
 
 __all__ = [
     'IS_ALPHANUMERIC',

@@ -9,8 +9,9 @@ License: GPL v2
 
 from html import *
 from validators import *
+
 from sql import SQLStorage, SQLDB
-from storage import Storage
+from utils import Storage
 
 import uuid
 import urllib

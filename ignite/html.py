@@ -19,7 +19,7 @@ import tokenize
 import keyword
 import base64
 
-from storage import Storage
+from utils import Storage
 from validators import *
 
 regex_crlf = re.compile('\r|\n')

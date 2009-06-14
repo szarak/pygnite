@@ -24,4 +24,4 @@ def render(template_name, **context):
     from main import request
 
     template = env.get_template(template_name)
-    return template.render(session=request.session, **context)
+    return template.render(request=request, session=request.session, **context)
