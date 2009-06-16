@@ -31,12 +31,12 @@ def create_app(env, start_response):
     for route in _routes:
         match = route.match(request.path)
         if match is not None:
-            unamed_vars = match.groups() or ()
-            named_vars = match.groupdict() or {}
+            vars = match.groupdict() or {}
+            vars['unnamed'] = match.groups() or None
 
             (f, content_type) = _routes[route]
             try:
-                controller = f(request, *unamed_vars, **named_vars)
+                controller = f(request, **vars)
 
                 if isinstance(controller, basestring):
                     controller = Response(controller, content_type=content_type)

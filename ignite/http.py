@@ -13,9 +13,14 @@ __all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
-def url(addr, methods=['GET'], content_type='text/html'):
+def url(addr, methods=['*'], content_type='text/html'):
     def wrap(f):
-        for method in methods:
+        if methods[0] == '*':
+            _methods = routes.keys()
+        else:
+            _methods = methods
+
+        for method in _methods:
             if method in routes:
                 if not routes[method].has_key(addr):
                     route = { re.compile(addr) : (f, content_type) }

@@ -1,11 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-__all__ = ['Storage', 'hash', 'Session']
+__all__ = ['Storage', 'hash']
 
 import hashlib
-from beaker.session import SessionObject
-
 
 class Storage(dict):
 
@@ -25,5 +23,3 @@ def hash(value, digest_alg='md5'):
     h.update(value)
     return h.hexdigest()
 
-class Session(SessionObject, Storage):
-    pass
