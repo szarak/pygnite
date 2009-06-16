@@ -32,7 +32,8 @@ def create_app(env, start_response):
         match = route.match(request.path)
         if match is not None:
             vars = match.groupdict() or {}
-            vars['unnamed'] = match.groups() or None
+            if match.groups():
+                vars['unnamed'] = match.groups()
 
             (f, content_type) = _routes[route]
             try:
