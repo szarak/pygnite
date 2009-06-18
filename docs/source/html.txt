@@ -1,7 +1,7 @@
 HTML Helpers
 ============
 
-.. automodule:: html
+.. automodule:: ignite.html
     :members:
     :undoc-members:
     :show-inheritance:
