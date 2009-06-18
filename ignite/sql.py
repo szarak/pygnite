@@ -90,12 +90,14 @@ def database(engine='sqlite3', db='database.db', host=None, username=None, passw
     """
     if engine == 'sqlite3':
         if not db.startswith('/'):
-            root = ''.join(os.path.split(os.path.dirname(__file__))[:-1])
+            root = sys.path[0]
             db_path = os.path.join(root, db)
-            db_folder = os.path.dirname(db)
+            db_folder = os.path.dirname(db_path)
 
             if not os.path.isdir(db_folder):
                 os.makedirs(db_folder)
+        else:
+            db_path = db
 
         return SQLDB('sqlite://%s' % db_path)
     elif engine == 'oracle':
