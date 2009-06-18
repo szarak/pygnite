@@ -6,7 +6,7 @@ Installation
 
 To install Ignite get sources first.
 
-    `Stable version <http://github.com/pagenoare/ignite/zipball/0.1>`_
+    `Stable version <http://github.com/pagenoare/ignite/zipball/0.1.2>`_
 
     `Unstable version (from git) <http://github.com/pagenoare/ignite/zipball/master>`_
 
