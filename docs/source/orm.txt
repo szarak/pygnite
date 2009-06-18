@@ -1,0 +1,56 @@
+Object-Relational Mapping
+=========================
+
+Connecting
+----------
+
+.. autofunction:: sql.database
+
+
+Working with data
+-----------------
+
+Define table
+^^^^^^^^^^^^
+
+>>> db = database()
+>>> db.define_table('table_name',
+        db.Field('title'),
+        db.Field('description', 'text'),
+    )
+
+
+Inserting, Deleting, Updating etc.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Insert**
+
+>>> db.table_name.insert(title='test', description='foo')
+
+**Delete**
+
+>>> del db.table_name[id]
+or
+>>> db(query).delete()
+
+**Update**
+
+>>> db(query).update(title='new title', description='bar')
+
+where ``query`` is like ``db.table_name.id > 0``
+
+.. seealso::
+    `Full web2py orm documentation <http://web2py.com/examples/default/dal>`_
+
+Validators
+----------
+
+.. automodule:: validators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Auto forms
+----------
+
+.. autoclass:: sqlhtml.SQLFORM

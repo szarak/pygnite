@@ -1,0 +1,17 @@
+Routes
+======
+
+.. autofunction:: http.url
+.. autofunction:: http.get
+.. autofunction:: http.post
+.. autofunction:: http.put
+.. autofunction:: http.delete
+.. autofunction:: http.redirect
+
+
+404 and 500
+-----------
+
+.. autofunction:: http._500
+.. autofunction:: http._404
+

@@ -1,0 +1,18 @@
+Changelog
+=========
+
+v0.1.2 (18.06.2009)
+-------------------
+
+* unnamed vars are optional and are passed as ``unnamed`` param
+* setup.py added
+* first version of docs
+
+v0.1 (13.06.2009)
+-----------------
+
+* own Request & Response objects
+* url and wrappers (get, post, put, delete etc.) decorators
+* orm, validators, sqlhtml and html from web2py implemented
+* utils file with Storage and hash objects
+* error 404 / 500 (with traceback)

@@ -3,7 +3,7 @@
 import re
 import cgi
 
-from storage import *
+from utils import *
 from template import *
 from main import IGNITE_PATH
 
@@ -13,7 +13,22 @@ __all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
-def url(addr, methods=['*'], content_type='text/html'):
+def url(regex, methods=['*'], content_type='text/html'):
+    """
+    Route decorator.
+
+    example:
+        >>> @url('^/$')
+            def foo(request):
+                pass
+        
+        will return foo function when address is /
+
+    :param regex: Regexp for url path.
+    :param methods: Lists of methods, if ['*'] match all. 
+    :param content_type: Content Type of returned text. 
+
+    """
     def wrap(f):
         if methods[0] == '*':
             _methods = routes.keys()
@@ -22,29 +37,49 @@ def url(addr, methods=['*'], content_type='text/html'):
 
         for method in _methods:
             if method in routes:
-                if not routes[method].has_key(addr):
-                    route = { re.compile(addr) : (f, content_type) }
+                if not routes[method].has_key(regex):
+                    route = { re.compile(regex) : (f, content_type) }
                     routes[method].update(route)
     return wrap
 
-def get(addr, **kwds):
+def get(regex, **kwds):
+    """
+    Shortcut for:
+
+        >>> @url(regex, methods=['GET'])
+    """
     def wrap(f):
-        return url(addr, methods=['GET'], **kwds)(f)
+        return url(regex, methods=['GET'], **kwds)(f)
     return wrap
 
-def post(addr, **kwds):
+def post(regex, **kwds):
+    """
+    Shortcut for:
+        
+        >>> @url(regex, methods=['POST'])
+    """
     def wrap(f):
-        return url(addr, methods=['POST'], **kwds)(f)
+        return url(regex, methods=['POST'], **kwds)(f)
     return wrap
 
-def put(addr, **kwds):
+def put(regex, **kwds):
+    """
+    Shortcut for:
+    
+        >>> @url(regex, methods=['PUT'])
+    """
     def wrap(f):
-        return url(addr, methods=['PUT'], **kwds)(f)
+        return url(regex, methods=['PUT'], **kwds)(f)
     return wrap
 
-def delete(addr, **kwds):
+def delete(regex, **kwds):
+    """
+    Shortcut for:
+    
+        >>> @url(regex, methods=['DELETE'])
+    """
     def wrap(f):
-        return url(addr, methods=['DELETE'], **kwds)(f)
+        return url(regex, methods=['DELETE'], **kwds)(f)
     return wrap
 
 def get_response_status(status):
@@ -120,6 +155,14 @@ class Response(object):
 
 
 def redirect(location, body='redirecting...', status=302, **kwds):
+    """
+    Redirect.
+
+    :param location: Location. 
+    :param body: Body.
+    :param status: Status.
+    """
+
     status = get_response_status(status)
 
     response = Response(body=body, status=status, **kwds)
@@ -130,9 +173,15 @@ def redirect(location, body='redirecting...', status=302, **kwds):
 append_path(IGNITE_PATH + '/templates/')
 
 def _500(body=''):
+    """
+    Return error 500.
+    """
     return render('500.html', body=body)
 
 def _404():
+    """
+    Return error 404. 
+    """
     return render('404.html')
 
 

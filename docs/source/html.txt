@@ -1,0 +1,7 @@
+HTML Helpers
+============
+
+.. automodule:: html
+    :members:
+    :undoc-members:
+    :show-inheritance:

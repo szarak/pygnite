@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-This file is part of web2py Web Framework (Copyrighted, 2007)
-Developed by Massimo Di Pierro <mdipierro@cs.depaul.edu>
-License: GPL v2
-"""
-
 from html import *
 from validators import *
 
@@ -212,27 +206,25 @@ class UploadWidget:
 class SQLFORM(FORM):
 
     """
-    SQLFORM is used to map a table (and a current record) into an HTML form
-   
-    given a SQLTable stored in db.table
 
-    SQLFORM(db.table) generates an insert form
-    record=db(db.table.id==some_id).select()[0]
-    SQLFORM(db.table,record) generates an update form
-    SQLFORM(db.table,record,deletable=True) generates an update 
-                                            with a delete button
-    if record is an int, record=db(db.table.id==record).select()[0]
-    optional arguments:
+    ``SQLFORM`` is used to map a table (and a current record) into an HTML form. 
+
+    >>> SQLFORM(db.table)  # generates an insert form
+
+    >>> record = db(db.table.id == some_id).select()[0]
+    >>> SQLFORM(db.table, record) # generates an update form
+    >>> SQLFORM(db.table, record, deletable=True) # generates an update with a delete button
     
-    fields: a list of fields that should be placed in the form, default is all.
-    labels: a dictionary with labels for each field. keys are field names.
-    col3  : a dictionary with content for an optional third column 
+    :param fields: a list of fields that should be placed in the form, default is all.
+    :param labels: a dictionary with labels for each field. keys are field names.
+    :param col3: a dictionary with content for an optional third column 
             (right of each field). keys are field names.
-    linkto: the URL of a controller/function to access referencedby records
+    :param linkto: the URL of a controller/function to access referencedby records
             see controller appadmin.py for examples
-    upload: the URL of a controller/function to download an uploaded file
+    :param upload: the URL of a controller/function to download an uploaded file
             see controller appadmin.py for examples
-    any named optional attribute is passed to the <form> tag
+    
+    :param attributes: any named optional attribute is passed to the <form> tag
             for example _class, _id, _style, _action,_method, etc.
 
     """

@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-This file is part of web2py Web Framework (Copyrighted, 2007)
-Developed by Massimo Di Pierro <mdipierro@cs.depaul.edu>
-License: GPL v2
-"""
-
 import uuid
 import cgi
 import re
@@ -76,7 +70,6 @@ __all__ = [
     'TITLE',
     'TR',
     'TT',
-    'URL',
     'XML',
     'xmlescape',
     'embed64',
@@ -96,62 +89,6 @@ def xmlescape(data, quote=False):
         data = data.encode('utf8', 'xmlcharrefreplace')
     data = cgi.escape(data, quote)
     return data
-
-
-def URL(
-    a=None,
-    c=None,
-    f=None,
-    r=None,
-    args=[],
-    vars={},
-    anchor='',
-    ):
-    """
-    example:
-
-    >>> URL(a='a',c='c',f='f',args=['x','y','z'],vars={'p':1, 'q':2},anchor='1')
-    '/a/c/f/x/y/z#1?q=2&p=1'
-
-    generates a url \"/a/c/f\" corresponding to application a, controller c 
-    and function f. If r=request is passed, a,c,f are set, respectively,
-    to r.applicaiton, r.controller, r.function. 
-
-    The more typical usage is:
-    
-    URL(r=request,f='index') that generates a url for the index function 
-    within the present application and controller.
-    """
-
-    application = controller = function = None
-    if r:
-        application = r.application
-        controller = r.controller
-        function = r.function
-    if a:
-        application = a
-    if c:
-        controller = c
-    if f:
-        if isinstance(f, str):
-            function = f
-        else:
-            function = f.__name__
-    if not (application and controller and function):
-        raise SyntaxError, 'not enough information to build the url'
-    other = ''
-    if args != [] and not isinstance(args, (list, tuple)):
-        args = [args]
-    if args:
-        other = urllib.quote('/' + '/'.join([str(x) for x in args]))
-    if anchor:
-        other += '#' + urllib.quote(str(anchor))
-    if vars:
-        other += '?%s' % urllib.urlencode(vars)
-    url = '/%s/%s/%s%s' % (application, controller, function, other)
-    if regex_crlf.search(url):
-        raise SyntaxError, 'CRLF Injection Detected'
-    return url
 
 
 ON = True
@@ -212,7 +149,7 @@ class DIV(object):
     """
     example:
     
-    >>> DIV('hello','world',_style='color:red;').xml() 
+    >>> DIV('hello', 'world', _style='color:red;').xml() 
     '<div style=\"color:red;\">helloworld</div>'
 
     all other HTML helpers are derived from DIV.
@@ -355,7 +292,7 @@ class __TAG__(object):
 
     """
     TAG factory example:
-    >>> print TAG.first(TAG.second('test'),_key=3)
+    >>> print TAG.first(TAG.second('test'), _key=3)
     <first key=\"3\"><second>test</second></first>
     """
 
@@ -627,13 +564,13 @@ class INPUT(DIV):
     """ 
         examples:
 
-        >>> INPUT(_type='text',_name='name',value='Max').xml()
+        >>> INPUT(_type='text', _name='name', value='Max').xml()
         '<input name=\"name\" type=\"text\" value=\"Max\" />'
-        >>> INPUT(_type='checkbox',_name='checkbox',value='on').xml()
+        >>> INPUT(_type='checkbox', _name='checkbox', value='on').xml()
         '<input checked=\"checked\" name=\"checkbox\" type=\"checkbox\" value=\"on\" />'
-        >>> INPUT(_type='radio',_name='radio',_value='yes',value='yes').xml()
+        >>> INPUT(_type='radio', _name='radio', _value='yes', value='yes').xml()
         '<input checked=\"checked\" name=\"radio\" type=\"radio\" value=\"yes\" />'
-        >>> INPUT(_type='radio',_name='radio',_value='no',value='yes').xml()
+        >>> INPUT(_type='radio', _name='radio', _value='no', value='yes').xml()
         '<input name=\"radio\" type=\"radio\" value=\"no\" />'
 
         the input helper takes two special attributes value= and requires=.
@@ -717,8 +654,8 @@ class INPUT(DIV):
 class TEXTAREA(INPUT):
 
     """
-    TEXTAREA(_name='sometext',value='bla '*100,requires=IS_NOT_EMPTY())
-    'bla bla bla ...' will be the content of the textarea field.
+    >>> TEXTAREA(_name='sometext', value='bla '*100, requires=IS_NOT_EMPTY())
+    # 'bla bla bla ...' will be the content of the textarea field.
     """
 
     tag = 'textarea'
@@ -753,7 +690,7 @@ class SELECT(INPUT):
     """
     example:
 
-    >>> SELECT('yes','no',_name='selector',value='yes',requires=IS_IN_SET(['yes','no'])).xml()
+    >>> SELECT('yes', 'no', _name='selector', value='yes', requires=IS_IN_SET(['yes', 'no'])).xml()
     '<select name=\"selector\"><option selected=\"selected\" value=\"yes\">yes</option><option value=\"no\">no</option></select>'
 
     """
@@ -803,15 +740,15 @@ class FORM(DIV):
     """
     example:
    
-    >>> form=FORM(INPUT(_name=\"test\",requires=IS_NOT_EMPTY()))
+    >>> form = FORM(INPUT(_name=\"test\", requires=IS_NOT_EMPTY()))
     >>> form.xml()
     '<form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><input name=\"test\" /></form>'
 
     a FORM is container for INPUT, TEXTAREA, SELECT and other helpers
-       
+
     form has one important method:
 
-        form.accepts(request.vars, session)
+        >>> form.accepts(request.vars, session)
 
     if form is accepted (and all validators pass) form.vars contains the
     accepted vars, otherwise form.errors contains the errors. 
@@ -905,8 +842,30 @@ class BEAUTIFY(DIV):
     """
     example:
 
-    >>> BEAUTIFY(['a','b',{'hello':'world'}]).xml()
-    '<div><table><tr><td><div>a</div></td></tr><tr><td><div>b</div></td></tr><tr><td><div><table><tr><td><b><div>hello</div></b></td><td align=\"top\">:</td><td><div>world</div></td></tr></table></div></td></tr></table></div>'
+    >>> BEAUTIFY(['a', 'b', {'hello' : 'world'}]).xml()
+    '<div>
+        <table>
+            <tr>
+                <td><div>a</div></td>
+            </tr>
+            <tr>
+                <td><div>b</div></td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <table>
+                            <tr>
+                                <td><b><div>hello</div></b></td>
+                                <td align=\"top\">:</td>
+                                <td><div>world</div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>'
 
     turns any list, dictionarie, etc into decent looking html.
     """
@@ -960,8 +919,10 @@ class BEAUTIFY(DIV):
 class MENU(DIV):
     """
     Used to build menus
-    menu = MENU([['name', False, URL(...), [submenu]], ...])
-    {{=menu}}
+    
+    >>> menu = MENU([['name', False, URL(...), [submenu]], ...])
+    {{ menu }}
+
     """
     tag = 'ul'
     def __init__(self, data, **args):
@@ -1005,52 +966,4 @@ def embed64(
         data = file.read()
     data = base64.b64encode(data)
     return 'data:%s;base64,%s' % (extension, data)
-
-
-def test():
-    """
-    Example:
-   
-    >>> from validators import *
-    >>> print DIV(A('click me',_href=URL(a='a',c='b',f='c')),BR(),HR(),DIV(SPAN(\"World\"),_class='unkown')).xml()
-    <div><a href=\"/a/b/c\">click me</a><br /><hr /><div class=\"unkown\"><span>World</span></div></div>
-    >>> print DIV(UL(\"doc\",\"cat\",\"mouse\")).xml()
-    <div><ul><li>doc</li><li>cat</li><li>mouse</li></ul></div>
-    >>> print DIV(UL(\"doc\",LI(\"cat\", _class='felin'),18)).xml()
-    <div><ul><li>doc</li><li class=\"felin\">cat</li><li>18</li></ul></div>
-    >>> print TABLE(['a','b','c'],TR('d','e','f'),TR(TD(1),TD(2),TD(3))).xml()
-    <table><tr><td>a</td><td>b</td><td>c</td></tr><tr><td>d</td><td>e</td><td>f</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>
-    >>> form=FORM(INPUT(_type='text',_name='myvar',requires=IS_EXPR('int(value)<10')))
-    >>> print form.xml()
-    <form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><input name=\"myvar\" type=\"text\" /></form>
-    >>> print form.accepts({'myvar':'34'},formname=None)
-    False
-    >>> print form.xml()
-    <form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><input name=\"myvar\" type=\"text\" value=\"34\" /><div class=\"error\" id=\"myvar__error\">invalid expression!</div></form>
-    >>> print form.accepts({'myvar':'4'},formname=None,keepvalues=True)
-    True
-    >>> print form.xml()
-    <form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><input name=\"myvar\" type=\"text\" value=\"4\" /></form>
-    >>> form=FORM(SELECT('cat','dog',_name='myvar'))
-    >>> print form.accepts({'myvar':'dog'},formname=None,keepvalues=True)
-    True
-    >>> print form.xml()
-    <form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><select name=\"myvar\"><option value=\"cat\">cat</option><option selected=\"selected\" value=\"dog\">dog</option></select></form>
-    >>> form=FORM(INPUT(_type='text',_name='myvar',requires=IS_MATCH('^\w+$','only alphanumeric!')))
-    >>> print form.accepts({'myvar':'as df'},formname=None)
-    False
-    >>> print form.xml()
-    <form action=\"\" enctype=\"multipart/form-data\" method=\"post\"><input name=\"myvar\" type=\"text\" value=\"as df\" /><div class=\"error\" id=\"myvar__error\">only alphanumeric!</div></form>
-    >>> session={}
-    >>> form=FORM(INPUT(value=\"Hello World\",_name=\"var\",requires=IS_MATCH('^\w+$')))
-    >>> if form.accepts({},session,formname=None): print 'passed'
-    >>> if form.accepts({'var':'test ','_formkey':session['_formkey[None]']},session,formname=None): print 'passed'
-    """
-
-    pass
-
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
 

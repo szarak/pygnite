@@ -1,13 +1,6 @@
 #!/Usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""
-This file is part of web2py Web Framework (Copyrighted, 2007)
-Developed by Massimo Di Pierro <mdipierro@cs.depaul.edu>
-Thanks to ga2arch for help with IS_IN_DB and IS_NOT_IN_DB on GAE
-License: GPL v2
-"""
-
 import os
 import re
 import copy
@@ -55,12 +48,12 @@ class IS_MATCH(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_MATCH('.+'))
-    
+    >>> INPUT(_type='text', _name='name', requires=IS_MATCH('.+'))
+
     the argument of IS_MATCH is a regular expression.
 
-    IS_MATCH('.+')('hello') returns ('hello',None)
-    IS_MATCH('.+')('') returns ('','invalid!')   
+    >>> IS_MATCH('.+')('hello') # returns ('hello', None)
+    >>> IS_MATCH('.+')('') # returns ('', 'invalid!')
     """
 
     def __init__(self, expression, error_message='invalid expression!'):
@@ -79,12 +72,12 @@ class IS_EXPR(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_EXPR('5<int(value)<10'))
-    
+    >>> INPUT(_type='text', _name='name', requires=IS_EXPR('5 < int(value) < 10'))
+
     the argument of IS_EXPR must be python condition
 
-    IS_EXPR('int(value)<2')('1') returns (1,None)
-    IS_EXPR('int(value)<2')('2') returns ('2','invalid expression!')   
+    >>> IS_EXPR('int(value) < 2')('1') # returns (1, None)
+    >>> IS_EXPR('int(value) < 2')('2') # returns ('2', 'invalid expression!')
     """
 
     def __init__(self, expression, error_message='invalid expression!'):
@@ -104,8 +97,8 @@ class IS_LENGTH(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_LENGTH(32))
-    
+    >>> INPUT(_type='text', _name='name', requires=IS_LENGTH(32))
+
     the argument of IS_LENGTH is the man number of characters
     """
 
@@ -144,7 +137,7 @@ class IS_IN_SET(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_IN_SET(['max','john']))
+    >>> INPUT(_type='text', _name='name', requires=IS_IN_SET(['max', 'john']))
     
     the argument of IS_IN_SET must be a list or set
     """
@@ -192,7 +185,7 @@ class IS_IN_DB(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_IN_DB(db,db.table))
+    >>> INPUT(_type='text', _name='name', requires=IS_IN_DB(db, db.table))
 
     used for reference fields, rendered as a dropbox
     """
@@ -274,7 +267,7 @@ class IS_NOT_IN_DB(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_NOT_IN_DB(db,db.table))
+    >>> INPUT(_type='text', _name='name', requires=IS_NOT_IN_DB(db, db.table))
  
     makes the field unique
     """
@@ -314,7 +307,7 @@ class IS_INT_IN_RANGE(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_INT_IN_RANGE(0,10))
+    >>> INPUT(_type='text', _name='name', requires=IS_INT_IN_RANGE(0, 10))
     """
 
     def __init__(
@@ -343,7 +336,7 @@ class IS_FLOAT_IN_RANGE(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_FLOAT_IN_RANGE(0,10))
+    >>> INPUT(_type='text', _name='name', requires=IS_FLOAT_IN_RANGE(0, 10))
     """
 
     def __init__(
@@ -371,7 +364,7 @@ class IS_NOT_EMPTY(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_NOT_EMPTY())
+    >>> INPUT(_type='text', _name='name', requires=IS_NOT_EMPTY())
     """
 
     def __init__(self, error_message='cannot be empty!'):
@@ -388,7 +381,7 @@ class IS_ALPHANUMERIC(IS_MATCH):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_ALPHANUMERIC())
+    >>> INPUT(_type='text', _name='name', requires=IS_ALPHANUMERIC())
     """
 
     def __init__(self, error_message='must be alphanumeric!'):
@@ -400,7 +393,7 @@ class IS_EMAIL(IS_MATCH):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_EMAIL())
+    >>> INPUT(_type='text', _name='name', requires=IS_EMAIL())
     """
 
     def __init__(self, error_message='invalid email!'):
@@ -562,7 +555,6 @@ def escape_unicode(string):
     @param string: unicode string, the unicode string to convert into an escaped US-ASCII form
     @return: string, the US-ASCII escaped form of the inputed string 
     
-    @author: Jonathan Benn
     '''
     returnValue = StringIO()
     
@@ -689,7 +681,7 @@ class IS_GENERIC_URL(object):
     to None then prepending will be disabled. URLs that require prepending to parse will still be accepted, 
     but the return value will not be modified.
     
-    @author: Jonathan Benn
+    :author: Jonathan Benn
     """
 
     def __init__(
@@ -1227,8 +1219,9 @@ class IS_URL(object):
        * The string breaks any of the HTTP syntactic rules
        * The URL scheme specified (if one is specified) is not 'http' or 'https'
        * The top-level domain (if a host name is specified) does not exist
+
     (These rules are based on RFC 2616: http://www.faqs.org/rfcs/rfc2616.html)
-    
+
     This function only checks the URL's syntax. It does not check that the URL points to a real document, 
     for example, or that it otherwise makes sense semantically. This function does automatically prepend
     'http://' in front of a URL in the case of an abbreviated URL (e.g. 'google.ca').
@@ -1238,15 +1231,16 @@ class IS_URL(object):
        * The string is empty or None
        * The string uses characters that are not allowed in a URL
        * The URL scheme specified (if one is specified) is not valid
+
     (These rules are based on RFC 2396: http://www.faqs.org/rfcs/rfc2396.html)
-    
+
     The list of allowed schemes is customizable with the allowed_schemes parameter. If you exclude None from
     the list, then abbreviated URLs (lacking a scheme such as 'http') will be rejected.
-    
+
     The default prepended scheme is customizable with the prepend_scheme parameter. If you set prepend_scheme
     to None then prepending will be disabled. URLs that require prepending to parse will still be accepted, 
     but the return value will not be modified.
-    
+
     IS_URL is compatible with the Internationalized Domain Name (IDN) standard specified in RFC 3490
     (http://tools.ietf.org/html/rfc3490). As a result, URLs can be regular strings or unicode strings.
     If the URL's domain component (e.g. google.ca) contains non-US-ASCII letters, then the domain will
@@ -1254,16 +1248,16 @@ class IS_URL(object):
     bit beyond the standards, and allows non-US-ASCII characters to be present in the path
     and query components of the URL as well. These non-US-ASCII characters will be escaped using the 
     standard '%20' type syntax. e.g. the unicode character with hex code 0x4e86 will become '%4e%86'
-    
+
     Code Examples:
 
-    INPUT(_type='text',_name='name',requires=IS_URL())
-    INPUT(_type='text',_name='name',requires=IS_URL(mode='generic'))
-    INPUT(_type='text',_name='name',requires=IS_URL(allowed_schemes=['https']))
-    INPUT(_type='text',_name='name',requires=IS_URL(prepend_scheme='https'))
-    INPUT(_type='text',_name='name',requires=IS_URL(mode='generic', allowed_schemes=['ftps', 'https'], prepend_scheme='https'))
+    >>> INPUT(_type='text', _name='name', requires=IS_URL())
+    >>> INPUT(_type='text', _name='name', requires=IS_URL(mode='generic'))
+    >>> INPUT(_type='text', _name='name', requires=IS_URL(allowed_schemes=['https']))
+    >>> INPUT(_type='text', _name='name', requires=IS_URL(prepend_scheme='https'))
+    >>> INPUT(_type='text', _name='name', requires=IS_URL(mode='generic', allowed_schemes=['ftps', 'https'], prepend_scheme='https'))
     
-    @author: Jonathan Benn
+    :author: Jonathan Benn
     """
 
     def __init__(
@@ -1342,7 +1336,7 @@ class IS_TIME(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_TIME())
+    >>> INPUT(_type='text', _name='name', requires=IS_TIME())
 
     understands the follwing formats
     hh:mm:ss [am/pm]
@@ -1382,7 +1376,7 @@ class IS_DATE(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_DATE())
+    >>> INPUT(_type='text', _name='name', requires=IS_DATE())
 
     date has to be in the ISO8960 format YYYY-MM-DD
     """
@@ -1418,7 +1412,7 @@ class IS_DATETIME(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=IS_DATETIME())
+    >>> INPUT(_type='text', _name='name', requires=IS_DATETIME())
 
     datetime has to be in the ISO8960 format YYYY-MM-DD hh:mm:ss
     """
@@ -1514,7 +1508,7 @@ class CLEANUP(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=CLEANUP())
+    >>> INPUT(_type='text', _name='name', requires=CLEANUP())
 
     removes special characters on validation
     """
@@ -1535,7 +1529,7 @@ class CRYPT(object):
     """
     example:
 
-    INPUT(_type='text',_name='name',requires=CRYPT())
+    >>> INPUT(_type='text', _name='name', requires=CRYPT())
 
     encodes the value on validation with a digest
     """
@@ -1561,3 +1555,5 @@ class IS_IN_SUBSET(IS_IN_SET):
         if failures:
             return (value, self.error_message)
         return (value, None)
+
+

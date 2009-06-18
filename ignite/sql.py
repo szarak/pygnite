@@ -1,16 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-This file is part of web2py Web Framework (Copyrighted, 2007)
-Developed by Massimo Di Pierro <mdipierro@cs.depaul.edu>
-License: GPL v2
-
-Thanks to Niall Sweeny<niall.sweeny@fonjax.com> for MSSQL support
-Thanks to Marcel Leuthi<mluethi@mlsystems.ch> for Oracle support
-"""
-
-__all__ = ['database', 'SQLDB', 'SQLField']
+__all__ = ['database']
 
 import re
 import sys
@@ -88,6 +79,15 @@ import validators
 sql_locker = thread.allocate_lock()
 
 def database(engine='sqlite3', db='database.db', host=None, username=None, password=None, port=None):
+    """This function is wrapper which returns ``SQLDB`` known from web2py.
+
+    :param engine: Database engine, e.g. ``sqlite3`` or ``mysql``. 
+    :param db: If engine is sqlite, path to database, else database name. 
+    :param host: Host. Default: `localhost`. 
+    :param username: Usename.
+    :param password: Password.
+    :param port: Port.
+    """
     if engine == 'sqlite3':
         if not db.startswith('/'):
             root = ''.join(os.path.split(os.path.dirname(__file__))[:-1])
