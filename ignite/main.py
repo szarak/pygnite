@@ -78,7 +78,7 @@ def ignite(**conf):
     elif mode == 'fcgi':
         # run fcgi
         from flup.server.fcgi import WSGIServer as fcgi
-        addr = (host, port) if port else host
+        addr = (host, port) if port else None
         fcgi(app, bindAddress=addr).run()
     elif mode == 'scgi':
         # run scgi

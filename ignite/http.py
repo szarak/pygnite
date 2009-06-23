@@ -148,7 +148,7 @@ class Response(object):
 
     def __call__(self, env, start_response):
         self.headers['Content-type'] = self.content_type
-        self.headers['Content-length'] = len(self.body)
+        self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
         return [ str(self.body) ]
