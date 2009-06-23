@@ -12,7 +12,7 @@ setup(
         version='0.1.2',
         packages=['ignite'],
         license='GPLv2',
-        install_requires=['werkzeug', 'beaker'],
+        install_requires=['werkzeug', 'flup', 'beaker'],
 )
 
 

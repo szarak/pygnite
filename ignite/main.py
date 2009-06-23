@@ -5,7 +5,6 @@ import os
 import sys
 import traceback
 
-from werkzeug import run_simple
 from beaker.middleware import SessionMiddleware
 
 IGNITE_PATH = os.path.dirname(__file__)
@@ -52,8 +51,40 @@ def create_app(env, start_response):
     return Response(_404())(env, start_response)
 
 
-def ignite(host='127.0.0.1', port=6060, session_key='mysession', session_secret='randomsecret'):
+def ignite(**conf):
+    ## Conf to var assignment
+    # Serving conf
+    mode = conf.get('mode', 'dev')
+    host = conf.get('host', '127.0.0.1')
+    port = conf.get('port', 6060)
+    # templates path. ofc you can add it manually by template.append_path
+    templates_path = conf.get('templates_path', os.path.join(sys.path[0], 'templates'))
+    append_path(templates_path)
+    # Session config
+    session_key = conf.get('session_key', 'mysession')
+    session_secret = conf.get('session_secret', 'randomsecret')
+
+    if not mode in ('dev', 'fcgi', 'scgi', 'gae'):
+        # if mode not supported, choose dev
+        mode = 'dev'
+
+    ## Session middleware:
     app = SessionMiddleware(create_app, key=session_key, secret=session_secret)
-    run_simple(host, port, app, use_reloader=True)
+
+    if mode == 'dev':
+        # run dev server
+        from werkzeug import run_simple
+        run_simple(host, port, app, use_reloader=True)
+    elif mode == 'fcgi':
+        # run fcgi
+        from flup.server.fcgi import WSGIServer as fcgi
+        addr = (host, port) if port else host
+        fcgi(app, bindAddress=addr).run()
+    elif mode == 'scgi':
+        # run scgi
+        pass
+    elif mode == 'gae':
+        # run gae
+        pass
 
 

@@ -6,7 +6,7 @@ Ignite is simple web framework written in Python.
 Todo
 ====
 
-* scgi/fcgi/gae (?) support
+* scgi/gae (?) support
 * own Session object
 * own dev server
-* configuration (?)
+* sinatra-like routes (no more regex in @url)
