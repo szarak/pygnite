@@ -37,7 +37,7 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Ignite'
+project = u'Pygnite'
 copyright = u'2009, Kacper Krupa'
 
 # The version info for the project you're documenting, acts as replacement for

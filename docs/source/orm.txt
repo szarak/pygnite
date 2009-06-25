@@ -4,7 +4,7 @@ Object-Relational Mapping
 Connecting
 ----------
 
-.. autofunction:: ignite.sql.database
+.. autofunction:: pygnite.sql.database
 
 
 Working with data
@@ -45,7 +45,7 @@ where ``query`` is like ``db.table_name.id > 0``
 Validators
 ----------
 
-.. automodule:: ignite.validators
+.. automodule:: pygnite.validators
     :members:
     :undoc-members:
     :show-inheritance:
@@ -53,4 +53,4 @@ Validators
 Auto forms
 ----------
 
-.. autoclass:: ignite.sqlhtml.SQLFORM
+.. autoclass:: pygnite.sqlhtml.SQLFORM

@@ -4,13 +4,13 @@
 from setuptools import setup
 
 setup(
-        name='Ignite',
-        description='Ignite is simple web framework written in Python.',
+        name='pygnite',
+        description='Pygnite is simple web framework written in Python.',
         author='Kacper Krupa',
         author_email='pagenoare@gmail.com',
-        url='http://pagenoare.net/ignite/',
+        url='http://pygnite.com',
         version='0.1.2',
-        packages=['ignite'],
+        packages=['pygnite'],
         license='GPLv2',
         install_requires=['werkzeug', 'flup', 'beaker'],
 )

@@ -1,17 +1,17 @@
 Routes
 ======
 
-.. autofunction:: ignite.http.url
-.. autofunction:: ignite.http.get
-.. autofunction:: ignite.http.post
-.. autofunction:: ignite.http.put
-.. autofunction:: ignite.http.delete
-.. autofunction:: ignite.http.redirect
+.. autofunction:: pygnite.http.url
+.. autofunction:: pygnite.http.get
+.. autofunction:: pygnite.http.post
+.. autofunction:: pygnite.http.put
+.. autofunction:: pygnite.http.delete
+.. autofunction:: pygnite.http.redirect
 
 
 404 and 500
 -----------
 
-.. autofunction:: ignite.http._500
-.. autofunction:: ignite.http._404
+.. autofunction:: pygnite.http._500
+.. autofunction:: pygnite.http._404
 

@@ -4,17 +4,17 @@ Getting started
 Installation
 ------------
 
-To install Ignite get sources first.
+To install Pygnite get sources first.
 
-    `Stable version <http://github.com/pagenoare/ignite/zipball/0.1.2>`_
+    `Stable version <http://github.com/pagenoare/pygnite/zipball/0.1.2>`_
 
-    `Unstable version (from git) <http://github.com/pagenoare/ignite/zipball/master>`_
+    `Unstable version (from git) <http://github.com/pagenoare/pygnite/zipball/master>`_
 
 Next, unzip it and goto terminal. Type (from root)::
 
    python setup.py install
 
-Yeah, ignite is on your system now.
+Yeah, pygnite is on your system now.
 
 First application
 -----------------
@@ -23,21 +23,21 @@ Now, we're going to create a simple one-file application. First open
 hello.py and
 type::
 
-   from ignite import *
+   from pygnite import *
 
-It'll import ignite. Next::
+It'll import pygnite. Next::
 
    @get('^/$')
    def index(request):
        return 'Hello world'
 
 We've created simple index function, which takes param request, and it's
-decorated by ``get`` from ignite. It means it'll be "shown" only at / when
+decorated by ``get`` from pygnite. It means it'll be "shown" only at / when
 HTTP method is GET. 
 
-The final step is run ignite dev server, add::
+The final step is run pygnite dev server, add::
 
-   ignite()
+   pygnite()
 
 at the end and run script::
 
