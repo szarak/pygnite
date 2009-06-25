@@ -1,7 +1,7 @@
 About
 =====
 
-Ignite is simple web framework written in Python.
+Pygnite is simple web framework written in Python.
 
 Todo
 ====
