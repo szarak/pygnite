@@ -46,9 +46,9 @@ def create_app(env, start_response):
 
             except:
                 t = traceback.format_exception(*sys.exc_info())
-                return Response(_500(''.join(t)))(env, start_response)
+                return _500(''.join(t))(env, start_response)
 
-    return Response(_404())(env, start_response)
+    return _404()(env, start_response)
 
 
 def pygnite(**conf):

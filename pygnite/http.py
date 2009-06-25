@@ -176,12 +176,20 @@ def _500(body=''):
     """
     Return error 500.
     """
-    return render('500.html', body=body)
+    template = render('500.html', body=body)
+    response = Response(body=template, status=500)
+
+    return response
 
 def _404():
     """
     Return error 404. 
     """
-    return render('404.html')
+    template = render('404.html')
+    response = Response(body=template, status=404)
+
+    return response
+
+
 
 
