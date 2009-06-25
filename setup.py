@@ -11,6 +11,8 @@ setup(
         url='http://pygnite.com',
         version='0.1.2',
         packages=['pygnite'],
+        include_package_data = True,
+        package_data={ 'pygnite' : ['templates/*.html'] },
         license='GPLv2',
         install_requires=['werkzeug', 'flup', 'beaker'],
 )

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if session.has_key('user') %}
+Hello <strong>{{ session.user.login }}</strong> <br/><br/>
+<a href="/logout">Logout</a>
+{% else %}
+<a href="/register">Register</a> <br/>
+<a href="/login">Log-in</a>
+{% endif %}
+
+{% endblock %}
