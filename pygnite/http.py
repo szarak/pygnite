@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
 import re
 import cgi
 
@@ -9,7 +10,7 @@ from main import IGNITE_PATH
 
 from httplib import responses
 
-__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', '_404', '_500']
+__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', 'serve_static', '_404', '_500']
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
@@ -35,7 +36,7 @@ def url(regex, methods=['*'], content_type='text/html'):
             _methods = routes.keys()
         else:
             _methods = methods
-        wildcards = { '*' : '[^/]+', '@' : '\w+', '#' : '\d+' }
+        wildcards = { '*' : '[^/]*', '@' : '\w+', '#' : '\d+' }
 
         for method in _methods:
             if method in routes:
@@ -193,6 +194,23 @@ def redirect(location, body='redirecting...', status=302, **kwds):
 
     return response
 
+def serve_static(static_path, indexes=False, f=None):
+    if f:
+        from mimetypes import guess_type
+
+        file_path = os.path.join(static_path, f)
+        f = open(file_path, 'rb')
+
+        response = Response(body=f.read(), content_type=guess_type(file_path) or 'text/plain')
+
+        return response
+    else:
+        if indexes:
+            files = os.listdir(static_path)
+            return render('list_files.html', files=files)
+        else:
+            return _403()
+
 append_path(IGNITE_PATH + '/templates/')
 
 def _500(body=''):
@@ -204,6 +222,15 @@ def _500(body=''):
 
     return response
 
+def _403(body=''):
+    """
+    Return error 500.
+    """
+    template = render('403.html', body=body)
+    response = Response(body=template, status=403)
+
+    return response
+
 def _404():
     """
     Return error 404. 
@@ -212,7 +239,4 @@ def _404():
     response = Response(body=template, status=404)
 
     return response
-
-
-
 
