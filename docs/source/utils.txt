@@ -1,0 +1,6 @@
+Utils
+=====
+
+.. autoclass:: pygnite.utils.Storage
+.. autofunction:: pygnite.utils.hash
+
