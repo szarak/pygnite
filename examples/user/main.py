@@ -5,22 +5,22 @@ from pygnite import *
 
 from model import db
 
-@get('^/$')
+@get('/')
 def index(request):
     return render('index.html')
 
-@url('^/register/?$', methods=['GET', 'POST'])
+@url('/register', methods=['GET', 'POST'])
 def register(request):
     form = SQLFORM(db.user)
 
     if form.accepts(request.vars):
         db.commit()
-        request.session['flash'] = 'You\'ve been registred. '
+        request.session['flash'] = 'You\'ve been registered. '
         return redirect('/')
 
     return render('form.html', form=form)
 
-@url('^/login/?$', methods=['GET', 'POST'])
+@url('/login', methods=['GET', 'POST'])
 def login(request):
     db.user.login.requires = IS_NOT_EMPTY()
     form = SQLFORM(db.user, fields=['login', 'password'])
@@ -41,7 +41,7 @@ def login(request):
 
     return render('form.html', form=form)
 
-@get('^/logout/?')
+@get('/logout')
 def logout(request):
     if request.session.has_key('user'):
         del request.session['user']

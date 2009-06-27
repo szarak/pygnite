@@ -3,7 +3,7 @@
 
 from pygnite import *
 
-@url('^/$')
+@get('/')
 def index(request):
     return 'Hello world'
 

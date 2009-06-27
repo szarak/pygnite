@@ -17,12 +17,12 @@ def url(regex, methods=['*'], content_type='text/html'):
     """
     Route decorator.
 
-    example:
-        >>> @url('^/$')
-            def foo(request):
-                pass
-        
-        will return foo function when address is /
+    example::
+        @url('^/$')
+        def foo(request):
+            pass
+
+    will return foo function when address is /
 
     :param regex: Regexp for url path.
     :param methods: Lists of methods, if ['*'] match all. 
@@ -34,11 +34,33 @@ def url(regex, methods=['*'], content_type='text/html'):
             _methods = routes.keys()
         else:
             _methods = methods
+        wildcards = { '*' : '.*', '@' : '\w+', '#' : '\d+' }
 
         for method in _methods:
             if method in routes:
                 if not routes[method].has_key(regex):
-                    route = { re.compile(regex) : (f, content_type) }
+                    if type(regex) == str:
+                        # If regex is string, convert it to regexp...
+                        pattern = re.compile('([%s]+):?(\w+)?' % ''.join(wildcards.keys()))
+                        u = '^'
+                        for part in [part for part in regex.split('/') if part]:
+                            match = pattern.match(part)
+                            u += '/'
+                            if match:
+                                (wildcard, name) = match.groups()
+                                wildcard = wildcards.get(wildcard, '.*')
+                                if name:
+                                    u += '(?P<%s>%s)' % (name, wildcard)
+                                else:
+                                    u += '(%s)' % wildcard
+                            else:
+                                u += part
+                        u += '/?$'
+                    else:
+                        # Else u = regex (allow regexp in @url())
+                        u = regex
+
+                    route = { re.compile(u) : (f, content_type) }
                     routes[method].update(route)
     return wrap
 
