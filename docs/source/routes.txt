@@ -1,3 +1,8 @@
+Pygnite
+=======
+
+.. autofunction:: pygnite.main.pygnite
+
 Routes
 ======
 
@@ -8,6 +13,37 @@ Routes
 .. autofunction:: pygnite.http.delete
 .. autofunction:: pygnite.http.redirect
 
+Wildcards
+---------
+
+``*`` => [^/]+ - all without /  
+
+``@`` => \w+ - string  
+
+``#`` => \d+ - numbers  
+
+Use ``@url`` decorators (or shortcuts) to "show" function at specific address. 
+
+Examples
+--------
+
+::
+
+    @url('/')
+    def index(request):
+        return 'Hello' # will return Hello when address is /
+
+::
+    
+    @url('/@:name/')
+    def hello(request, name):
+        return 'Hello %s' % name # will return Hello foo when address is /foo
+
+::
+    
+    @url('/@:name/*/')
+    def welcome(request, name, all):
+        return 'Hello %s %s' % (name, all[1]) # will return Hello foo bar when address is /foo/bar
 
 404 and 500
 -----------

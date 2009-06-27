@@ -1,0 +1,6 @@
+Servers
+=======
+
+.. autofunction:: pygnite.server.dev
+.. autofunction:: pygnite.server.fcgi
+

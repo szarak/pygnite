@@ -13,6 +13,7 @@ Pygnite
     routes
     html
     orm
+    server
     blog_example
     license
     changelog

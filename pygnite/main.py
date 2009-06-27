@@ -16,7 +16,7 @@ from html import *
 from sqlhtml import *
 from validators import *
 from template import *
-
+from server import *
 
 def create_app(env, start_response):
     global request
@@ -30,15 +30,15 @@ def create_app(env, start_response):
     for route in _routes:
         match = route.match(request.path)
         if match is not None:
-            vars = Storage()
-            vars.update(match.groupdict())
-            vars.all = match.groups()
+            params = Storage()
+            params.update(match.groupdict())
+            params['all'] = match.groups()
 
             (f, content_type) = _routes[route]
             try:
                 try:
-                    controller = f(request, **vars)
-                except TypeError, e:
+                    controller = f(request, params)
+                except TypeError:
                     controller = f(request)
 
                 if isinstance(controller, basestring):
@@ -55,11 +55,23 @@ def create_app(env, start_response):
 
 
 def pygnite(**conf):
+    """
+    Main pygnite function which lunches supported server.
+
+    :param mode: Server mode (see server module for supported)
+    :param host: Hostname.
+    :param port: Port.
+    :param server_conf: Extra server configuration.
+    :param templates_path: Path to templates.
+    :param session_key: Session key.
+    :param session_secret: Session secret.
+    """
     ## Conf to var assignment
     # Serving conf
     mode = conf.get('mode', 'dev')
     host = conf.get('host', '127.0.0.1')
     port = conf.get('port', 6060)
+    server_conf = conf.get('server_conf', {})
     # templates path. ofc you can add it manually by template.append_path
     templates_path = conf.get('templates_path', os.path.join(sys.path[0], 'templates'))
     append_path(templates_path)
@@ -67,27 +79,15 @@ def pygnite(**conf):
     session_key = conf.get('session_key', 'mysession')
     session_secret = conf.get('session_secret', 'randomsecret')
 
-    if not mode in ('dev', 'fcgi', 'scgi', 'gae'):
+    if not mode in SERVERS:
         # if mode not supported, choose dev
         mode = 'dev'
 
     ## Session middleware:
     app = SessionMiddleware(create_app, key=session_key, secret=session_secret)
 
-    if mode == 'dev':
-        # run dev server
-        from werkzeug import run_simple
-        run_simple(host, port, app, use_reloader=True)
-    elif mode == 'fcgi':
-        # run fcgi
-        from flup.server.fcgi import WSGIServer as fcgi
-        addr = (host, port) if port else None
-        fcgi(app, bindAddress=addr).run()
-    elif mode == 'scgi':
-        # run scgi
-        pass
-    elif mode == 'gae':
-        # run gae
-        pass
+    if mode == 'dev' and not server_conf.has_key('auto_reload'):
+        server_conf['auto_reload'] = True
 
+    eval('%s(app, host, port, **server_conf)' % mode)
 

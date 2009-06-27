@@ -18,7 +18,8 @@ def url(regex, methods=['*'], content_type='text/html'):
     Route decorator.
 
     example::
-        @url('^/$')
+
+        @url('/')
         def foo(request):
             pass
 
@@ -34,7 +35,7 @@ def url(regex, methods=['*'], content_type='text/html'):
             _methods = routes.keys()
         else:
             _methods = methods
-        wildcards = { '*' : '.*', '@' : '\w+', '#' : '\d+' }
+        wildcards = { '*' : '[^/]+', '@' : '\w+', '#' : '\d+' }
 
         for method in _methods:
             if method in routes:
