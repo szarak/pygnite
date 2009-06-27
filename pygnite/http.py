@@ -195,6 +195,14 @@ def redirect(location, body='redirecting...', status=302, **kwds):
     return response
 
 def serve_static(static_path, indexes=False, f=None):
+    """
+    Controller for serving static files.
+
+    :param static_path: Path to static files.
+    :param indexes: List files (True/False).
+    :param f: File.
+    """
+
     if f:
         from mimetypes import guess_type
 
@@ -209,34 +217,31 @@ def serve_static(static_path, indexes=False, f=None):
             files = os.listdir(static_path)
             return render('list_files.html', files=files)
         else:
-            return _403()
+            return _status(403, '403.html')
 
 append_path(IGNITE_PATH + '/templates/')
+
+def _status(status, template, body=''):
+    """
+    Return response with specific status and template. 
+
+    :param status: Response status, e.g. 500 or 404.
+    :param template: Template name.
+    :param body: Body.
+    """
+    template = render(template, body=body)
+    response= Response(body=template, status=status)
+
+    return response
 
 def _500(body=''):
     """
     Return error 500.
     """
-    template = render('500.html', body=body)
-    response = Response(body=template, status=500)
-
-    return response
-
-def _403(body=''):
-    """
-    Return error 500.
-    """
-    template = render('403.html', body=body)
-    response = Response(body=template, status=403)
-
-    return response
+    return _status(500, '500.html')
 
 def _404():
     """
     Return error 404. 
     """
-    template = render('404.html')
-    response = Response(body=template, status=404)
-
-    return response
-
+    return _status(404, '404.html')

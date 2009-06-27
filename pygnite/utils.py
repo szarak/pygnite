@@ -6,6 +6,15 @@ __all__ = ['Storage', 'hash']
 import hashlib
 
 class Storage(dict):
+    """
+    dict-like object, where items can be accessed like attributtes.
+
+    ::
+
+        d = Storage()
+        d.foo = 'bar' # it's d['foo'] = 'bar'
+
+    """
 
     def __getattr__(self, value):
         return self.get(value, None)
@@ -19,6 +28,10 @@ class Storage(dict):
 
 
 def hash(value, digest_alg='md5'):
+    """
+    Return hashed string by ``digest_alg``.
+    """
+
     h = hashlib.new(digest_alg)
     h.update(value)
     return h.hexdigest()

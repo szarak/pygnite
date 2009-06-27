@@ -10,9 +10,11 @@ Pygnite
     :maxdepth: 2
 
     getting_started
-    routes
+    main
+    http
     html
     orm
+    utils
     server
     blog_example
     license

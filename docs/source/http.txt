@@ -1,10 +1,8 @@
-Pygnite
-=======
-
-.. autofunction:: pygnite.main.pygnite
+HTTP
+====
 
 Routes
-======
+------
 
 .. autofunction:: pygnite.http.url
 .. autofunction:: pygnite.http.get
@@ -45,9 +43,21 @@ Examples
     def welcome(request, name, all):
         return 'Hello %s %s' % (name, all[1]) # will return Hello foo bar when address is /foo/bar
 
+Serving static
+--------------
+
+Create function like this::
+    
+    @url('/static/*:file')
+    def static(request, params):
+        return serve_static(os.path.join(sys.path[0], 'static'), f=params.file)
+
+.. autofunction:: pygnite.http.serve_static
+
 404 and 500
 -----------
 
+.. autofunction:: pygnite.http._status
 .. autofunction:: pygnite.http._500
 .. autofunction:: pygnite.http._404
 
