@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-SERVERS = ['dev', 'fcgi']
+SERVERS = ['dev', 'fcgi', 'scgi', 'gae']
 
 def dev(app, host='127.0.0.1', port='6060', **kwds):
     """
@@ -29,9 +29,20 @@ def fcgi(app, host=None, port=None, **kwds):
     addr = (host, port) if port else None
     fcgi(app, bindAddress=addr).run()
 
-# TODO:
-def scgi():
-    pass
+def scgi(app, host=None, port=None, **kwds):
+    """
+    Run scgi server.
 
-def gae():
-    pass
+    :param app: Application.
+    :param host: Hostname.
+    :param port: Port.
+    """
+
+    from flup.server.scgi_fork import WSGIServer as scgi
+    addr = (host, port) if port else None
+    scgi(application=app, bindAddress=addr).run()
+
+def gae(app, host, port, **kwds):
+    from google.appengine.ext.webapp.util import run_wsgi_app
+
+    run_wsgi_app(app)
