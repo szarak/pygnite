@@ -8,4 +8,4 @@ def index(request):
     return 'Hello world'
 
 
-if __name__ == '__main__': pygnite()
+if __name__ == '__main__': pygnite(debug='www')

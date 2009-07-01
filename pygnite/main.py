@@ -18,8 +18,10 @@ from validators import *
 from template import *
 from server import *
 
+debug = None
+
 def create_app(env, start_response):
-    global request
+    global request, debug
 
     request = Request(env)
     request.session = env['beaker.session']
@@ -34,8 +36,8 @@ def create_app(env, start_response):
             params.update(match.groupdict())
             params['all'] = match.groups()
 
-            (f, content_type) = _routes[route]
             try:
+                (f, content_type) = _routes[route]
                 try:
                     controller = f(request, params)
                 except TypeError:
@@ -48,8 +50,17 @@ def create_app(env, start_response):
                 return controller(env, start_response)
 
             except:
-                t = traceback.format_exception(*sys.exc_info())
-                return _500(''.join(t))(env, start_response)
+                t = ''.join(traceback.format_exception(*sys.exc_info()))
+
+                if debug == 'console':
+                    print t
+                if debug == 'www':
+                    return _500(t)(env, start_response)
+                if debug == True:
+                    print t
+                    return _500(t)(env, start_response)
+
+                return _500()(env, start_response)
 
     return _404()(env, start_response)
 
@@ -65,7 +76,10 @@ def pygnite(**conf):
     :param templates_path: Path to templates.
     :param session_key: Session key.
     :param session_secret: Session secret.
+    :param debug: if debug is True, show traceback in console and www, if console - only console, if www - only www. Default: True.
     """
+
+    global debug
     ## Conf to var assignment
     # Serving conf
     mode = conf.get('mode', 'dev')
@@ -78,6 +92,8 @@ def pygnite(**conf):
     # Session config
     session_key = conf.get('session_key', 'mysession')
     session_secret = conf.get('session_secret', 'randomsecret')
+    # debug:
+    debug = conf.get('debug', True)
 
     if not mode in SERVERS:
         # if mode not supported, choose dev

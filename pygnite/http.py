@@ -238,7 +238,7 @@ def _500(body=''):
     """
     Return error 500.
     """
-    return _status(500, '500.html')
+    return _status(500, '500.html', body)
 
 def _404():
     """
