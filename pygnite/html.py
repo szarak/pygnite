@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of web2py Web Framework (Copyrighted, 2007)
+# Developed by Massimo Di Pierro <mdipierro@cs.depaul.edu>
+# License: GPL v2
+
+
 import uuid
 import cgi
 import re
