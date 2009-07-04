@@ -4,13 +4,14 @@ import os
 import re
 import cgi
 
-from utils import *
-from template import *
-from main import IGNITE_PATH
-
 from httplib import responses
 
-__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'redirect', 'serve_static', '_404', '_500']
+from utils import Storage, hash
+from template import append_path, render
+from main import IGNITE_PATH
+
+
+__all__ = ['routes', 'url', 'get', 'post', 'put', 'delete', 'Request', 'Response', 'Session', 'redirect', 'serve_static', '_404', '_500']
 
 routes = Storage({ 'GET' : Storage(), 'POST' : Storage(), 'PUT' : Storage(), 'DELETE' : Storage() })
 
@@ -172,12 +173,21 @@ class Response(object):
         self.status = get_response_status(status)
 
     def __call__(self, env, start_response):
-        self.headers['Content-type'] = self.content_type
-        self.headers['Content-length'] = str(len(self.body))
+        if not self.headers.has_key('Content-type'):
+            self.headers['Content-type'] = self.content_type
+        if not self.headers.has_key('Conyent-length'):
+            self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
         return [ str(self.body.encode('utf-8')) ]
 
+
+
+class Session(Storage):
+    """Pygnite session object"""
+
+    def __init__(self):
+        pass
 
 def redirect(location, body='redirecting...', status=302, **kwds):
     """
