@@ -175,7 +175,7 @@ class Response(object):
     def __call__(self, env, start_response):
         if not self.headers.has_key('Content-type'):
             self.headers['Content-type'] = self.content_type
-        if not self.headers.has_key('Conyent-length'):
+        if not self.headers.has_key('Content-length'):
             self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
