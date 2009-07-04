@@ -14,7 +14,7 @@ def dev(app, host='127.0.0.1', port='6060', **kwds):
     """
 
     from werkzeug import run_simple
-    run_simple(host, port, app, use_reloader=kwds.get('auto_reload', True))
+    return run_simple(host, port, app, use_reloader=kwds.get('auto_reload', True))
 
 def fcgi(app, host=None, port=None, **kwds):
     """
@@ -27,7 +27,7 @@ def fcgi(app, host=None, port=None, **kwds):
 
     from flup.server.fcgi import WSGIServer as fcgi
     addr = (host, port) if port else None
-    fcgi(app, bindAddress=addr).run()
+    return fcgi(app, bindAddress=addr).run()
 
 def scgi(app, host=None, port=None, **kwds):
     """
@@ -40,9 +40,10 @@ def scgi(app, host=None, port=None, **kwds):
 
     from flup.server.scgi_fork import WSGIServer as scgi
     addr = (host, port) if port else None
-    scgi(application=app, bindAddress=addr).run()
+    return scgi(application=app, bindAddress=addr).run()
 
 def gae(app, host, port, **kwds):
     from google.appengine.ext.webapp.util import run_wsgi_app
 
-    run_wsgi_app(app)
+    return run_wsgi_app(app)
+

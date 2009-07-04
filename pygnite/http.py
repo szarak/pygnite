@@ -41,7 +41,7 @@ def url(regex, methods=['*'], content_type='text/html'):
         for method in _methods:
             if method in routes:
                 if not routes[method].has_key(regex):
-                    if type(regex) == str:
+                    if isinstance(regex, str):
                         # If regex is string, convert it to regexp...
                         pattern = re.compile('([%s]+):?(\w+)?' % ''.join(wildcards.keys()))
                         u = '^'
@@ -64,6 +64,7 @@ def url(regex, methods=['*'], content_type='text/html'):
 
                     route = { re.compile(u) : (f, content_type) }
                     routes[method].update(route)
+        return f
     return wrap
 
 def get(regex, **kwds):
@@ -110,10 +111,10 @@ def get_response_status(status):
     return "%s %s" % (status, responses.get(status))
 
 class Request(Storage):
-    """Ignite request object"""
+    """Pygnite request object"""
 
     def __init__(self, env):
-        self.path = env['PATH_INFO'] or '/'
+        self.path = env.get('PATH_INFO') or env.get('REQUEST_URI', '/')
         self.method = env['REQUEST_METHOD']
 
         self.update(env)
@@ -161,7 +162,7 @@ class Request(Storage):
         return vars
 
 class Response(object):
-    """Ignite response object"""
+    """Pygnite response object"""
 
     headers = {}
 
@@ -175,7 +176,7 @@ class Response(object):
         self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
-        return [ str(self.body) ]
+        return [ str(self.body.encode('utf-8')) ]
 
 
 def redirect(location, body='redirecting...', status=302, **kwds):
@@ -210,6 +211,7 @@ def serve_static(static_path, indexes=False, f=None):
         f = open(file_path, 'rb')
 
         response = Response(body=f.read(), content_type=guess_type(file_path) or 'text/plain')
+        f.close()
 
         return response
     else:
@@ -245,3 +247,4 @@ def _404():
     Return error 404. 
     """
     return _status(404, '404.html')
+

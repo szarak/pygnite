@@ -5,20 +5,20 @@ import os
 import sys
 import traceback
 
+import server
+
 from beaker.middleware import SessionMiddleware
 
 IGNITE_PATH = os.path.dirname(__file__)
 
+from utils import Storage, hash
+
 from http import *
-from utils import *
 from sql import *
 from html import *
 from sqlhtml import *
 from validators import *
 from template import *
-from server import *
-
-debug = None
 
 def create_app(env, start_response):
     global request, debug
@@ -44,7 +44,8 @@ def create_app(env, start_response):
                     controller = f(request)
 
                 if isinstance(controller, basestring):
-                    controller = Response(controller, content_type=content_type)
+                    controller = Response(controller, content_type=content_type, status=getattr(f, 'status', 200))
+                    controller.headers.update(getattr(f, 'headers', {}))
 
                 request.session.save()
                 return controller(env, start_response)
@@ -78,8 +79,8 @@ def pygnite(**conf):
     :param session_secret: Session secret.
     :param debug: if debug is True, show traceback in console and www, if console - only console, if www - only www. Default: True.
     """
-
     global debug
+
     ## Conf to var assignment
     # Serving conf
     mode = conf.get('mode', 'dev')
@@ -95,7 +96,7 @@ def pygnite(**conf):
     # debug:
     debug = conf.get('debug', True)
 
-    if not mode in SERVERS:
+    if not mode in server.SERVERS:
         # if mode not supported, choose dev
         mode = 'dev'
 
@@ -105,5 +106,5 @@ def pygnite(**conf):
     if mode == 'dev' and not server_conf.has_key('auto_reload'):
         server_conf['auto_reload'] = True
 
-    eval('%s(app, host, port, **server_conf)' % mode)
+    return getattr(server, mode)(app, host, port, **server_conf)
 
