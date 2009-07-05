@@ -37,25 +37,29 @@ def url(regex, methods=['*'], content_type='text/html'):
             _methods = routes.keys()
         else:
             _methods = methods
-        wildcards = { '*' : '[^/]*', '@' : '\w+', '#' : '\d+' }
+        wildcards = { '*' : '[^/]+', '@' : '\w+', '#' : '\d+' }
 
         for method in _methods:
             if method in routes:
                 if not routes[method].has_key(regex):
                     if isinstance(regex, str):
                         # If regex is string, convert it to regexp...
-                        pattern = re.compile('([%s]+):?(\w+)?' % ''.join(wildcards.keys()))
+                        pattern = re.compile('([%s]+):?(\w+)?(\?)?' % ''.join(wildcards.keys()))
                         u = '^'
                         for part in [part for part in regex.split('/') if part]:
                             match = pattern.match(part)
                             u += '/'
                             if match:
-                                (wildcard, name) = match.groups()
+                                (wildcard, name, is_optional) = match.groups()
                                 wildcard = wildcards.get(wildcard, '.*')
+                                tmp = ''
                                 if name:
-                                    u += '(?P<%s>%s)' % (name, wildcard)
+                                    tmp += '(?P<%s>%s)' % (name, wildcard)
                                 else:
-                                    u += '(%s)' % wildcard
+                                    tmp += '(%s)' % wildcard
+                                if is_optional is not None:
+                                    tmp = '?%s?' % tmp
+                                u += tmp
                             else:
                                 u += part
                         u += '/?$'
