@@ -165,16 +165,17 @@ class Request(Storage):
 class Response(object):
     """Pygnite response object"""
 
-    headers = {}
-
     def __init__(self, body='', content_type='text/html', status=200):
+        self.headers = Storage()
         self.body = body
         self.content_type = content_type
         self.status = get_response_status(status)
 
     def __call__(self, env, start_response):
-        self.headers['Content-type'] = self.content_type
-        self.headers['Content-length'] = str(len(self.body))
+        if not self.headers.has_key('Content-type'):
+            self.headers['Content-type'] = self.content_type
+        if not self.headers.has_key('Content-length'):
+            self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
         if self.headers['Content-type'].startswith('text'):
