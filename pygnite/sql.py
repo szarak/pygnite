@@ -2141,7 +2141,7 @@ class SQLRows(object):
         for j in xrange(len(self.colnames)):
             value = self.response[i][j]
             if isinstance(value, unicode):
-                value = value.encode('utf-8')
+                value = value#.encode('utf-8')
             if not table_field.match(self.colnames[j]):
                 if not '_extra' in row:
                     row['_extra'] = SQLStorage()

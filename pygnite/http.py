@@ -173,13 +173,13 @@ class Response(object):
         self.status = get_response_status(status)
 
     def __call__(self, env, start_response):
-        if not self.headers.has_key('Content-type'):
-            self.headers['Content-type'] = self.content_type
-        if not self.headers.has_key('Content-length'):
-            self.headers['Content-length'] = str(len(self.body))
+        self.headers['Content-type'] = self.content_type
+        self.headers['Content-length'] = str(len(self.body))
 
         start_response(self.status, self.headers.items())
-        return [ str(self.body.encode('utf-8')) ]
+        if self.headers['Content-type'].startswith('text'):
+            self.body = str(self.body.encode('utf-8'))
+        return [ self.body ]
 
 
 
@@ -220,7 +220,7 @@ def serve_static(static_path, indexes=False, f=None):
         file_path = os.path.join(static_path, f)
         f = open(file_path, 'rb')
 
-        response = Response(body=f.read(), content_type=guess_type(file_path) or 'text/plain')
+        response = Response(body=f.read(), content_type=guess_type(file_path)[0] or 'text/plain')
         f.close()
 
         return response
