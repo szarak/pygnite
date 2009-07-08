@@ -37,7 +37,7 @@ def url(regex, methods=['*'], content_type='text/html'):
             _methods = routes.keys()
         else:
             _methods = methods
-        wildcards = { '*' : '[^/]+', '@' : '\w+', '#' : '\d+' }
+        wildcards = { '*' : '.+', '@' : '\w+', '#' : '\d+', '$' : '[^/]+' }
 
         for method in _methods:
             if method in routes:
@@ -219,20 +219,26 @@ def serve_static(static_path, indexes=False, f=None):
     :param f: File.
     """
 
-    if f:
+    path = os.path.join(static_path, f or '')
+
+    if not os.path.exists(path):
+        return _404()
+
+    if f and os.path.isfile(path):
         from mimetypes import guess_type
 
-        file_path = os.path.join(static_path, f)
-        f = open(file_path, 'rb')
+        f = open(path, 'rb')
 
-        response = Response(body=f.read(), content_type=guess_type(file_path)[0] or 'text/plain')
+        response = Response(body=f.read(), content_type=guess_type(path)[0] or 'text/plain')
         f.close()
 
         return response
     else:
         if indexes:
-            files = os.listdir(static_path)
-            return render('list_files.html', files=files)
+            files = os.listdir(path)
+
+            return render('list_files.html', files=[f for f in files if os.path.isfile(os.path.join(path, f))], 
+                                             dirs=[d for d in files if os.path.isdir(os.path.join(path, d))])
         else:
             return _status(403, '403.html')
 

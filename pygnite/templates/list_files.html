@@ -1,4 +1,10 @@
 
+<a href="../">../</a> <br/>
+
+{% for dir in dirs %}
+<a href="{{ dir }}/">{{ dir }}/</a> <br/>
+{% endfor %}
+
 {% for file in files %}
 <a href="{{ file }}">{{ file }}</a> <br/>
 {% endfor %}

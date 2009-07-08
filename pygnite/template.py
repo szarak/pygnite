@@ -6,18 +6,15 @@
 from jinja2 import Environment 
 from jinja2 import FileSystemLoader
 
-templates_path = []
-env = Environment(loader=FileSystemLoader(templates_path))
+env = Environment(loader=FileSystemLoader([]))
 
-def append_path(path):
-    if type(path) == str:
-        path = [path]
+def append_path(paths):
+    if isinstance(paths, str):
+        paths = [paths]
 
-    for p in path:
-        if not p in templates_path:
-            templates_path.append(p)
-
-    env.loader.searchpath = templates_path
+    for path in paths:
+        if not path in env.loader.searchpath:
+            env.loader.searchpath.append(path)
 
 
 def render(template_name, **context):
