@@ -5,12 +5,12 @@ SERVERS = ['dev', 'fcgi', 'scgi', 'gae']
 
 def dev(app, host='127.0.0.1', port='6060', **kwds):
     """
-    Lunch dev server.
+    Launches dev server.
 
     :param app: Application.
     :param host: Hostname.
     :param port: Port.
-    :param auto_reload: If True check files changes and reload server.
+    :param auto_reload: If True check files changes and reload server if occured.
     """
 
     from werkzeug import run_simple

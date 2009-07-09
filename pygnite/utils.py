@@ -7,7 +7,7 @@ import hashlib
 
 class Storage(dict):
     """
-    dict-like object, where items can be accessed like attributtes.
+    Storage is a dict-like object, where items can be accessed like attributtes.
 
     ::
 

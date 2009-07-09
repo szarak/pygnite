@@ -35,7 +35,7 @@ We've created simple index function, which takes param request, and it's
 decorated by ``get`` from pygnite. It means it'll be "shown" only at / when
 HTTP method is GET. 
 
-The final step is run pygnite dev server, add::
+The final step is to run pygnite dev server, add::
 
    pygnite()
 
